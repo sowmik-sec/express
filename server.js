@@ -3,6 +3,7 @@
 // 1. http module
 const http = require("http");
 const fs = require("fs");
+const _ = require("lodash");
 
 const server = http.createServer((req, res) => {
   console.log("request has been mode from browser to server");
@@ -12,6 +13,17 @@ const server = http.createServer((req, res) => {
   //   res.write("<h1>Hello World!</h1>");
   //   res.write("<h3>How are you doing?</h3>");
   //   res.end();
+  let num = _.random(0, 20);
+  console.log(num);
+
+  const greet = _.once(() => {
+    console.log("hello");
+  });
+
+  greet();
+  greet();
+  greet();
+
   let path = "./views";
   switch (req.url) {
     case "/":
