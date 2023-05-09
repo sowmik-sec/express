@@ -22,6 +22,11 @@ const server = http.createServer((req, res) => {
       path += "/about.html";
       res.statusCode = 200;
       break;
+    case "/about-me":
+      res.statusCode = 301;
+      res.setHeader("Location", "/about");
+      res.end();
+      break;
     default:
       path += "/404.html";
       res.statusCode = 404;
@@ -38,5 +43,5 @@ const server = http.createServer((req, res) => {
 
 // port number, host, callback func
 server.listen(5000, "localhost", () => {
-  console.log("server is listening on port 3000");
+  console.log("server is listening on port 5000");
 });
