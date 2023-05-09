@@ -5,14 +5,25 @@ const app = express();
 app.use(express.json());
 
 let users = {};
-app.get("/users", (req, res) => {
+app.get("/user", (req, res) => {
   res.send(users);
 });
 
-app.post("/users", (req, res) => {
+app.post("/user", (req, res) => {
   console.log(req.body);
-  users = req.body.name;
-  res.send({ message: "Data received successfully", user: req.body });
+  users = req.body;
+  res.json({ message: "Data received successfully", user: req.body });
+});
+
+// update => patch
+app.patch("/user", (req, res) => {
+  console.log("req.body => ", req.body);
+  // update data in users object
+  let dataToBeUpdated = req.body;
+  for (key in dataToBeUpdated) {
+    users[key] = dataToBeUpdated[key];
+  }
+  res.send({ message: "data updated successfully" });
 });
 
 app.listen(5000);
