@@ -4,7 +4,11 @@ const app = express();
 // middleware function -> post, front -> json
 app.use(express.json());
 
-let user = {};
+let user = [
+  { id: 1, name: "Ahsan" },
+  { id: 2, name: "Habib" },
+  { id: 3, name: "Sowmik" },
+];
 app.get("/user", (req, res) => {
   res.send(user);
 });
@@ -32,6 +36,13 @@ app.delete("/user", (req, res) => {
   res.json({
     message: "data has been deleted",
   });
+});
+
+// params
+app.get("/user/:username", (req, res) => {
+  console.log(req.params.username);
+  console.log(req.params);
+  res.send("user received");
 });
 
 app.listen(5000);
