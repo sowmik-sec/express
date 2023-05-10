@@ -45,4 +45,9 @@ app.get("/user/:username", (req, res) => {
   res.send("user received");
 });
 
+// query
+app.get("/user/query/q", (req, res) => {
+  res.send(req.query);
+});
+
 app.listen(5000);
