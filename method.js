@@ -9,18 +9,21 @@ let user = [
   { id: 2, name: "Habib" },
   { id: 3, name: "Sowmik" },
 ];
-app.get("/user", (req, res) => {
-  res.send(user);
-});
 
-app.post("/user", (req, res) => {
+const userRouter = express.Router();
+// base route, router to use
+app.use("/user", userRouter);
+
+const getUser = (req, res) => {
+  res.send(user);
+};
+
+const postUser = (req, res) => {
   console.log(req.body);
   user = req.body;
   res.json({ message: "Data received successfully", user: req.body });
-});
-
-// update => patch
-app.patch("/user", (req, res) => {
+};
+const updateUser = (req, res) => {
   console.log("req.body => ", req.body);
   // update data in user object
   let dataToBeUpdated = req.body;
@@ -28,26 +31,36 @@ app.patch("/user", (req, res) => {
     user[key] = dataToBeUpdated[key];
   }
   res.send({ message: "data updated successfully" });
-});
-
-// to delete a data
-app.delete("/user", (req, res) => {
+};
+const deleteUser = (req, res) => {
   user = {};
   res.json({
     message: "data has been deleted",
   });
-});
+};
 
-// params
-app.get("/user/:username", (req, res) => {
-  console.log(req.params.username);
-  console.log(req.params);
-  res.send("user received");
-});
+const getUserById = (req, res) => {
+  console.log(req.params.id);
+  let paramId = req.params.id;
+  let obj = {};
+  for (let i = 0; i < user.length; i++) {
+    if (user[i]["id"] == paramId) {
+      obj = user[i];
+    }
+  }
+  res.json({
+    message: "req received",
+    data: obj,
+  });
+};
 
-// query
-app.get("/user/query/q", (req, res) => {
-  res.send(req.query);
-});
+userRouter
+  .route("/")
+  .get(getUser)
+  .post(postUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+userRouter.route("/:id").get(getUserById);
 
 app.listen(5000);
