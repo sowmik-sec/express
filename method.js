@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 // middleware function -> post, front -> json
 app.use(express.json());
+app.use(cors());
 
 let user = [
   { id: 1, name: "Ahsan" },
@@ -11,8 +13,10 @@ let user = [
 ];
 
 const userRouter = express.Router();
+const authRouter = express.Router();
 // base route, router to use
 app.use("/user", userRouter);
+app.use("/auth", authRouter);
 
 const getUser = (req, res) => {
   res.send(user);
@@ -54,6 +58,16 @@ const getUserById = (req, res) => {
   });
 };
 
+const getSignUp = (req, res) => {
+  res.sendFile("public/index.html", { root: __dirname });
+};
+
+const postSignUp = (req, res) => {
+  let obj = req.body;
+  console.log("backend", obj);
+  res.json({ message: "user signed up", data: obj });
+};
+
 userRouter
   .route("/")
   .get(getUser)
@@ -62,5 +76,8 @@ userRouter
   .delete(deleteUser);
 
 userRouter.route("/:id").get(getUserById);
+authRouter.route("/signup").get(getSignUp).post(postSignUp);
 
-app.listen(5000);
+app.listen(5000, () => {
+  console.log("server is listening at port, ", 5000);
+});
