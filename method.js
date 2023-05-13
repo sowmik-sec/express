@@ -59,7 +59,8 @@ const getUserById = (req, res) => {
 };
 
 const getSignUp = (req, res) => {
-  res.sendFile("public/index.html", { root: __dirname });
+  // res.sendFile("public/index.html", { root: __dirname });
+  console.log("getSignup called");
 };
 
 const postSignUp = (req, res) => {
@@ -67,6 +68,18 @@ const postSignUp = (req, res) => {
   console.log("backend", obj);
   res.json({ message: "user signed up", data: obj });
 };
+
+function middleware1(req, res, next) {
+  console.log("middleware1 encountered");
+  next();
+}
+function middleware2(req, res, next) {
+  console.log("middleware2 encountered");
+  // next();
+  // res.json({ message: "middleware 2 ended req/res cycle" });
+  console.log("middleware 2 ended req/res cycle");
+  res.sendFile("public/index.html", { root: __dirname });
+}
 
 userRouter
   .route("/")
@@ -76,7 +89,10 @@ userRouter
   .delete(deleteUser);
 
 userRouter.route("/:id").get(getUserById);
-authRouter.route("/signup").get(getSignUp).post(postSignUp);
+authRouter
+  .route("/signup")
+  .get(middleware1, getSignUp, middleware2)
+  .post(postSignUp);
 
 app.listen(5000, () => {
   console.log("server is listening at port, ", 5000);
