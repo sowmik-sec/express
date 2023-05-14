@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 
@@ -80,6 +81,18 @@ function middleware2(req, res, next) {
   console.log("middleware 2 ended req/res cycle");
   res.sendFile("public/index.html", { root: __dirname });
 }
+
+const db_link =
+  "mongodb+srv://sowmiksec:h9oy9z6pCdPriUuU@cluster0.pihjs4z.mongodb.net/?retryWrites=true&w=majority";
+mongoose
+  .connect(db_link)
+  .then((db) => {
+    // console.log(db);
+    console.log("db connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 userRouter
   .route("/")
