@@ -107,12 +107,27 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
+    minLength: 6,
   },
   confirmPassword: {
     type: String,
     required: true,
+    minLength: 6,
   },
 });
+
+// model
+const userModel = mongoose.model("userModel", userSchema);
+(async function createUser() {
+  const user = {
+    name: "sowmik",
+    email: "sowmik@gmail.com",
+    password: "123456",
+    confirmPassword: "123456",
+  };
+  const data = await userModel.create(user);
+  console.log(data);
+})(); // this line of code immediately invoke the function
 
 userRouter
   .route("/")
