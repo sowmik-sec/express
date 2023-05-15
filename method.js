@@ -127,7 +127,8 @@ const userModel = mongoose.model("userModel", userSchema);
   };
   const data = await userModel.create(user);
   console.log(data);
-})(); // this line of code immediately invoke the function
+})();
+// this line of code immediately invoke the function
 
 userRouter
   .route("/")
