@@ -93,7 +93,7 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
+// DB
 const userSchema = mongoose.Schema({
   name: {
     type: String,
