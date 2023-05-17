@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const emailValidator = require("email-validator");
 const app = express();
 const cors = require("cors");
 
@@ -22,6 +23,9 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    validate: function () {
+      return emailValidator.validate(this.email);
+    },
   },
   password: {
     type: String,
@@ -32,16 +36,23 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     minLength: 6,
+    validate: function () {
+      return this.confirmPassword == this.password;
+    },
   },
 });
 
 // event occurs  before saving in db
-userSchema.pre("save", function () {
-  console.log("before saving in db", this);
-});
+// userSchema.pre("save", function () {
+//   console.log("before saving in db", this);
+// });
 // event occurs  after saving in db
-userSchema.post("save", function (doc) {
-  console.log("after saving in db", doc);
+// userSchema.post("save", function (doc) {
+//   console.log("after saving in db", doc);
+// });
+
+userSchema.pre("save", function () {
+  this.confirmPassword = undefined;
 });
 
 // model
