@@ -91,15 +91,17 @@ const getUserById = (req, res) => {
   });
 };
 
-const getSignUp = (req, res) => {
+const getSignUp = async (req, res, next) => {
   // res.sendFile("public/index.html", { root: __dirname });
   console.log("getSignup called");
+  next();
 };
 
-const postSignUp = (req, res) => {
-  let obj = req.body;
-  console.log("backend", obj);
-  res.json({ message: "user signed up", data: obj });
+const postSignUp = async (req, res) => {
+  const dataObj = req.body;
+  const user = await userModel.create(dataObj);
+  console.log("backend", user);
+  res.json({ message: "user signed up", data: user });
 };
 
 function middleware1(req, res, next) {
