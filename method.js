@@ -7,20 +7,52 @@ const cors = require("cors");
 app.use(express.json());
 app.use(cors());
 
-let user = [
-  { id: 1, name: "Ahsan" },
-  { id: 2, name: "Habib" },
-  { id: 3, name: "Sowmik" },
-];
-
 const userRouter = express.Router();
 const authRouter = express.Router();
 // base route, router to use
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 
-const getUser = (req, res) => {
-  res.send(user);
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 6,
+  },
+  confirmPassword: {
+    type: String,
+    required: true,
+    minLength: 6,
+  },
+});
+
+// model
+const userModel = mongoose.model("userModel", userSchema);
+
+const db_link =
+  "mongodb+srv://sowmiksec:h9oy9z6pCdPriUuU@cluster0.pihjs4z.mongodb.net/?retryWrites=true&w=majority";
+mongoose
+  .connect(db_link)
+  .then((db) => {
+    // console.log(db);
+    console.log("db connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+const getUsers = async (req, res) => {
+  const allUsers = await userModel.find();
+  res.json({ message: "list of all users", data: allUsers });
 };
 
 const postUser = (req, res) => {
@@ -82,57 +114,22 @@ function middleware2(req, res, next) {
   res.sendFile("public/index.html", { root: __dirname });
 }
 
-const db_link =
-  "mongodb+srv://sowmiksec:h9oy9z6pCdPriUuU@cluster0.pihjs4z.mongodb.net/?retryWrites=true&w=majority";
-mongoose
-  .connect(db_link)
-  .then((db) => {
-    // console.log(db);
-    console.log("db connected");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 // DB
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 6,
-  },
-  confirmPassword: {
-    type: String,
-    required: true,
-    minLength: 6,
-  },
-});
-
-// model
-const userModel = mongoose.model("userModel", userSchema);
-(async function createUser() {
-  const user = {
-    name: "sowmik",
-    email: "sowmik@gmail.com",
-    password: "123456",
-    confirmPassword: "123456",
-  };
-  const data = await userModel.create(user);
-  console.log(data);
-})();
+// (async function createUser() {
+//   const user = {
+//     name: "sowmik",
+//     email: "sowmik@gmail.com",
+//     password: "123456",
+//     confirmPassword: "123456",
+//   };
+//   const data = await userModel.create(user);
+//   console.log(data);
+// })();
 // this line of code immediately invoke the function
 
 userRouter
   .route("/")
-  .get(getUser)
+  .get(getUsers)
   .post(postUser)
   .patch(updateUser)
   .delete(deleteUser);
