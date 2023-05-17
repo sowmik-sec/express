@@ -35,6 +35,15 @@ const userSchema = mongoose.Schema({
   },
 });
 
+// event occurs  before saving in db
+userSchema.pre("save", function () {
+  console.log("before saving in db", this);
+});
+// event occurs  after saving in db
+userSchema.post("save", function (doc) {
+  console.log("after saving in db", doc);
+});
+
 // model
 const userModel = mongoose.model("userModel", userSchema);
 
@@ -107,7 +116,7 @@ const getSignUp = async (req, res, next) => {
 const postSignUp = async (req, res) => {
   const dataObj = req.body;
   const user = await userModel.create(dataObj);
-  console.log("backend", user);
+  // console.log("backend", user);
   res.json({ message: "user signed up", data: user });
 };
 
