@@ -65,7 +65,7 @@ const updateUser = async (req, res) => {
   // update data in user object
   let dataToBeUpdated = req.body;
   const user = await userModel.findOneAndUpdate(
-    { email: "ha@bib.com" },
+    { email: "ahsan@gmail.com" },
     dataToBeUpdated
   );
   // for (key in dataToBeUpdated) {
@@ -73,10 +73,13 @@ const updateUser = async (req, res) => {
   // }
   res.send({ message: "data updated successfully", data: user });
 };
-const deleteUser = (req, res) => {
-  user = {};
+const deleteUser = async (req, res) => {
+  // user = {};
+  const dataToBeDeleted = req.body;
+  const user = await userModel.findOneAndDelete(dataToBeDeleted);
   res.json({
     message: "data has been deleted",
+    data: user,
   });
 };
 
