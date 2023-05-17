@@ -60,14 +60,18 @@ const postUser = (req, res) => {
   user = req.body;
   res.json({ message: "Data received successfully", user: req.body });
 };
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   console.log("req.body => ", req.body);
   // update data in user object
   let dataToBeUpdated = req.body;
-  for (key in dataToBeUpdated) {
-    user[key] = dataToBeUpdated[key];
-  }
-  res.send({ message: "data updated successfully" });
+  const user = await userModel.findOneAndUpdate(
+    { email: "ha@bib.com" },
+    dataToBeUpdated
+  );
+  // for (key in dataToBeUpdated) {
+  //   user[key] = dataToBeUpdated[key];
+  // }
+  res.send({ message: "data updated successfully", data: user });
 };
 const deleteUser = (req, res) => {
   user = {};
