@@ -28,10 +28,17 @@ function middleware2(req, res, next) {
   res.sendFile("public/index.html", { root: __dirname });
 }
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const data = req.body;
-    const user = userModel.findOne({ email: data.email });
+    let user;
+    if (data.email) {
+      user = await userModel.findOne({ email: data.email });
+    } else {
+      return res.json({
+        message: "Please fill email and password",
+      });
+    }
     if (user) {
       // bcrypt -> compare function
       if (user.password == data.password) {
@@ -50,7 +57,7 @@ const loginUser = (req, res) => {
       });
     }
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       message: err.message,
     });
   }
