@@ -42,6 +42,7 @@ const loginUser = async (req, res) => {
     if (user) {
       // bcrypt -> compare function
       if (user.password == data.password) {
+        res.cookie("isLoggedIn", true, { httpOnly: true });
         return res.json({
           message: "User Logged in",
           userDetails: data,

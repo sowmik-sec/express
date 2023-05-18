@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
 const userModel = require("../models/userModel");
+const protectRoute = require("./authHelper");
 
 const getUsers = async (req, res) => {
   const allUsers = await userModel.find();
@@ -63,17 +64,6 @@ const setCookies = (req, res) => {
     httpOnly: true,
   });
   res.send("cookies has been set");
-};
-
-let flag = false; // user logged in or not
-const protectRoute = (req, res, next) => {
-  if (flag) {
-    next();
-  } else {
-    return res.status(401).json({
-      message: "Operation not allowed",
-    });
-  }
 };
 
 userRouter
