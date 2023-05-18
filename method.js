@@ -99,12 +99,22 @@ function middleware2(req, res, next) {
 // })();
 // this line of code immediately invoke the function
 
+// Cookies
+const getCookies = () => {};
+const setCookies = (req, res) => {
+  res.setHeader("Set-Cookie", "isLoggedIn=true");
+  res.send("cookies has been set");
+};
+
 userRouter
   .route("/")
   .get(getUsers)
   .post(postUser)
   .patch(updateUser)
   .delete(deleteUser);
+
+userRouter.route("/getCookies").get(getCookies);
+userRouter.route("/setCookies").get(setCookies);
 
 userRouter.route("/:id").get(getUserById);
 authRouter
