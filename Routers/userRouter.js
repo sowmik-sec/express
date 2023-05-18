@@ -65,9 +65,20 @@ const setCookies = (req, res) => {
   res.send("cookies has been set");
 };
 
+let flag = false; // user logged in or not
+const protectRoute = (req, res, next) => {
+  if (flag) {
+    next();
+  } else {
+    return res.status(401).json({
+      message: "Operation not allowed",
+    });
+  }
+};
+
 userRouter
   .route("/")
-  .get(getUsers)
+  .get(protectRoute, getUsers)
   .post(postUser)
   .patch(updateUser)
   .delete(deleteUser);
