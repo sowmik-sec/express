@@ -102,7 +102,11 @@ function middleware2(req, res, next) {
 // this line of code immediately invoke the function
 
 // Cookies
-const getCookies = () => {};
+const getCookies = (req, res) => {
+  const cookies = req.cookies;
+  console.log(cookies);
+  res.send("cookies received");
+};
 const setCookies = (req, res) => {
   // res.setHeader("Set-Cookie", "isLoggedIn=true");
   res.cookie("isLoggedIn", true, {
