@@ -1,8 +1,9 @@
 const express = require("express");
 const userModel = require("../models/userModel");
-
 const authRouter = express.Router();
-
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const JWT_KEY = process.env.JWT_KEY;
 const getSignUp = async (req, res, next) => {
   // res.sendFile("public/index.html", { root: __dirname });
   console.log("getSignup called");
@@ -42,7 +43,9 @@ const loginUser = async (req, res) => {
     if (user) {
       // bcrypt -> compare function
       if (user.password == data.password) {
-        res.cookie("isLoggedIn", true, { httpOnly: true });
+        const uid = user["_id"];
+        const token = jwt.sign({ payload: uid }, JWT_KEY);
+        res.cookie("login", token, { httpOnly: true });
         return res.json({
           message: "User Logged in",
           userDetails: data,
