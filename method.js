@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const userModel = require("./models/userModel");
 
 // middleware function -> post, front -> json
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 const userRouter = express.Router();
 const authRouter = express.Router();
@@ -102,7 +104,12 @@ function middleware2(req, res, next) {
 // Cookies
 const getCookies = () => {};
 const setCookies = (req, res) => {
-  res.setHeader("Set-Cookie", "isLoggedIn=true");
+  // res.setHeader("Set-Cookie", "isLoggedIn=true");
+  res.cookie("isLoggedIn", true, {
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: true,
+    httpOnly: true,
+  });
   res.send("cookies has been set");
 };
 
