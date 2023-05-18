@@ -55,11 +55,11 @@ userSchema.pre("save", function () {
   this.confirmPassword = undefined;
 });
 
-userSchema.pre("save", async function () {
-  const salt = await bcrypt.genSalt();
-  const hashedString = await bcrypt.hash(this.password, salt);
-  this.password = hashedString;
-});
+// userSchema.pre("save", async function () {
+//   const salt = await bcrypt.genSalt();
+//   const hashedString = await bcrypt.hash(this.password, salt);
+//   this.password = hashedString;
+// });
 
 // model
 const userModel = mongoose.model("userModel", userSchema);

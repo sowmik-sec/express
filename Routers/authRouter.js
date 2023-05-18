@@ -28,22 +28,39 @@ function middleware2(req, res, next) {
   res.sendFile("public/index.html", { root: __dirname });
 }
 
-// DB
-// (async function createUser() {
-//   const user = {
-//     name: "sowmik",
-//     email: "sowmik@gmail.com",
-//     password: "123456",
-//     confirmPassword: "123456",
-//   };
-//   const data = await userModel.create(user);
-//   console.log(data);
-// })();
-// this line of code immediately invoke the function
+const loginUser = (req, res) => {
+  try {
+    const data = req.body;
+    const user = userModel.findOne({ email: data.email });
+    if (user) {
+      // bcrypt -> compare function
+      if (user.password == data.password) {
+        return res.json({
+          message: "User Logged in",
+          userDetails: data,
+        });
+      } else {
+        return res.json({
+          message: "Wrong credentials",
+        });
+      }
+    } else {
+      return res.json({
+        message: "User not found",
+      });
+    }
+  } catch (err) {
+    return res.json({
+      message: err.message,
+    });
+  }
+};
 
 authRouter
   .route("/signup")
   .get(middleware1, getSignUp, middleware2)
   .post(postSignUp);
+
+authRouter.route("/login").post(loginUser);
 
 module.exports = authRouter;
