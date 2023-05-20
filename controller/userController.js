@@ -63,19 +63,18 @@ module.exports.deleteUser = async function deleteUser(req, res) {
   }
 };
 
-module.exports.getUserById = function getUserById(req, res) {
-  console.log(req.params.id);
-  let paramId = req.params.id;
-  let obj = {};
-  for (let i = 0; i < user.length; i++) {
-    if (user[i]["id"] == paramId) {
-      obj = user[i];
-    }
+module.exports.getAllUser = async function getAllUser(req, res) {
+  const users = await userModel.find();
+  if (users) {
+    res.json({
+      message: "Users retrieved",
+      data: users,
+    });
+  } else {
+    res.json({
+      message: "No user found",
+    });
   }
-  res.json({
-    message: "req received",
-    data: obj,
-  });
 };
 // Cookies
 // const getCookies = (req, res) => {
