@@ -44,13 +44,23 @@ module.exports.updateUser = async function updateUser(req, res) {
   }
 };
 module.exports.deleteUser = async function deleteUser(req, res) {
-  // user = {};
-  const dataToBeDeleted = req.body;
-  const user = await userModel.findOneAndDelete(dataToBeDeleted);
-  res.json({
-    message: "data has been deleted",
-    data: user,
-  });
+  try {
+    const id = req.params.id;
+    const user = await userModel.findByIdAndDelete(id);
+    if (!user) {
+      res.json({
+        message: "User not found",
+      });
+    }
+    res.json({
+      message: "data has been deleted",
+      data: user,
+    });
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
 };
 
 module.exports.getUserById = function getUserById(req, res) {
