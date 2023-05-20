@@ -1,27 +1,47 @@
 const userModel = require("../models/userModel");
 
-module.exports.getUsers = async function getUsers(req, res) {
-  const allUsers = await userModel.find();
-  res.json({ message: "list of all users", data: allUsers });
+module.exports.getUser = async function getUser(req, res) {
+  const id = req.params.id;
+  const user = await userModel.findById(id);
+  if (user) {
+    return res.json(user);
+  } else {
+    return res.json({
+      message: "user not found",
+    });
+  }
 };
 
-module.exports.postUser = async function postUser(req, res) {
-  console.log(req.body);
-  user = req.body;
-  res.json({ message: "Data received successfully", user: req.body });
-};
+// module.exports.postUser = async function postUser(req, res) {
+//   console.log(req.body);
+//   user = req.body;
+//   res.json({ message: "Data received successfully", user: req.body });
+// };
 module.exports.updateUser = async function updateUser(req, res) {
-  console.log("req.body => ", req.body);
-  // update data in user object
-  let dataToBeUpdated = req.body;
-  const user = await userModel.findOneAndUpdate(
-    { email: "ahsan@gmail.com" },
-    dataToBeUpdated
-  );
-  // for (key in dataToBeUpdated) {
-  //   user[key] = dataToBeUpdated[key];
-  // }
-  res.send({ message: "data updated successfully", data: user });
+  try {
+    let dataToBeUpdated = req.body;
+    const id = req.params.id;
+    const user = await userModel.findById(id);
+    if (user) {
+      const keys = [];
+      for (let key in dataToBeUpdated) {
+        keys.push(key);
+      }
+      for (let i = 0; i < keys.length; i++) {
+        user[keys[i]] = dataToBeUpdated[keys[i]];
+      }
+      const updatedData = await user.save();
+      res.send({ message: "data updated successfully", data: user });
+    } else {
+      res.json({
+        message: "user not found",
+      });
+    }
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
+  }
 };
 module.exports.deleteUser = async function deleteUser(req, res) {
   // user = {};
