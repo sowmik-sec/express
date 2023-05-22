@@ -5,6 +5,7 @@ require("dotenv").config();
 const JWT_KEY = process.env.JWT_KEY;
 
 module.exports.signup = async function signup(req, res) {
+  // export signup function
   try {
     const dataObj = req.body;
     const user = await userModel.create(dataObj);
