@@ -25,7 +25,7 @@ module.exports.signup = async function signup(req, res) {
   }
 };
 
-// login user
+// login user controller
 module.exports.login = async function login(req, res) {
   try {
     const data = req.body;
