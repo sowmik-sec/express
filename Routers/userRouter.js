@@ -1,13 +1,20 @@
 const express = require("express");
 const app = express();
 const userRouter = express.Router();
-const protectRoute = require("./authHelper");
+// const protectRoute = require("./authHelper");
 const {
   getUser,
   updateUser,
   deleteUser,
   getAllUser,
 } = require("../controller/userController");
+
+const {
+  signup,
+  login,
+  isAuthorized,
+  protectRoute,
+} = require("../controller/authController");
 
 // user options
 userRouter.route("/:id").patch(updateUser).delete(deleteUser);

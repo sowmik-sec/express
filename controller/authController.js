@@ -76,3 +76,33 @@ module.exports.isAuthorized = function isAuthorized(roles) {
     }
   };
 };
+
+// protectRoute
+module.exports.protectRoute = async function protectRoute(req, res, next) {
+  try {
+    let token;
+    if (req.cookies.login) {
+      token = req.cookies.login;
+      const payload = jwt.verify(token, JWT_KEY);
+
+      if (payload) {
+        const user = await userModel.findById(payload.payload);
+        req.role = user.role;
+        req.id = user.id;
+        next();
+      } else {
+        return res.status(401).json({
+          message: "user not verified",
+        });
+      }
+    } else {
+      return res.status(401).json({
+        message: "Please login again",
+      });
+    }
+  } catch (err) {
+    return res.json({
+      message: err.message,
+    });
+  }
+};
