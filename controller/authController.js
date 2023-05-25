@@ -63,3 +63,16 @@ module.exports.login = async function login(req, res) {
     });
   }
 };
+
+// isAuthorized -> to check the user's role (admin, delivery boy etc)
+module.exports.isAuthorized = function isAuthorized(roles) {
+  return function (req, res, next) {
+    if (roles.include(req.role) === true) {
+      next();
+    } else {
+      res.status(401).json({
+        message: "Operation not allowed",
+      });
+    }
+  };
+};
